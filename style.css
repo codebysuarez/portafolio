@@ -111,3 +111,50 @@ body{
   object-fit: contain;
   border-radius: 6px;
 }
+
+/* ===== Cursor Sparkles Layer ===== */
+#cursor-sparkles{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999; /* por encima del contenido */
+}
+
+/* Estrella con brillo suave (clip-path + glow) */
+.sparkle{
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%,-50%) scale(.6);
+  opacity: 0;
+  /* estrella de 10 puntas */
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 100%,
+    50% 75%,
+    21% 100%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  background:
+    radial-gradient(circle at 50% 50%, #fff 0%, #fff 30%, rgba(77,163,255,0.95) 55%, rgba(77,163,255,0.0) 70%);
+  filter:
+    drop-shadow(0 0 6px rgba(77,163,255,.85))
+    drop-shadow(0 0 14px rgba(77,163,255,.35));
+  transition: transform .85s ease, opacity .85s ease;
+}
+
+/* Animación de desvanecimiento y ligera salida */
+.sparkle.fade{
+  opacity: 0;
+  transform: translate(-50%,-50%) rotate(25deg) scale(.15);
+}
+
+/* Opcional: más “pop” cuando se pasa sobre tarjetas */
+.card:hover{
+  box-shadow: 0 10px 28px rgba(0,0,0,.42), 0 0 0 1px rgba(77,163,255,.12) inset;
+}

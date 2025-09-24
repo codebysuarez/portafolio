@@ -11,6 +11,60 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" href="imagenes/favicon.png" />
 </head>
+
+  <!-- Capa para destellos del cursor -->
+  <div id="cursor-sparkles" aria-hidden="true"></div>
+
+  <script>
+    // ===== Cursor Sparkles (pool-based, motion-safe) =====
+    (function () {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return; // Respeta usuarios con reducción de movimiento
+
+      const LAYER = document.getElementById('cursor-sparkles');
+      const POOL_SIZE = 28;              // ajusta cantidad máxima en pantalla
+      const SPARKLES = [];
+      let i = 0;
+      let enabled = true;
+
+      // Desactiva en touch para evitar gasto innecesario
+      window.addEventListener('touchstart', () => enabled = false, { once: true });
+
+      // Crea el pool
+      for (let k = 0; k < POOL_SIZE; k++) {
+        const el = document.createElement('div');
+        el.className = 'sparkle';
+        LAYER.appendChild(el);
+        SPARKLES.push(el);
+      }
+
+      // Reutiliza un sparkle del pool
+      function place(x, y) {
+        const s = SPARKLES[i];
+        i = (i + 1) % POOL_SIZE;
+
+        // reset estado
+        s.style.left = x + 'px';
+        s.style.top  = y + 'px';
+        s.style.opacity = '1';
+        s.style.transform = `translate(-50%,-50%) rotate(${(Math.random()*360)|0}deg) scale(${0.9 + Math.random()*0.6})`;
+
+        // fuerza reflow y dispara fade
+        // (trick para que el transition ocurra)
+        s.offsetHeight; 
+        s.classList.remove('fade');
+        requestAnimationFrame(() => s.classList.add('fade'));
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        if (!enabled) return;
+        place(e.clientX, e.clientY);
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
+
 <body>
   <header class="site-header">
     <nav class="nav container">
